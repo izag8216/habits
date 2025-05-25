@@ -1,0 +1,25 @@
+{
+  "name": "habits",
+  "version": "1.0.0",
+  "description": "A sleek, modern web application for tracking daily habits and building lasting routines. Built with vanilla JavaScript, this application offers a clean and intuitive interface for managing your personal habits.",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+    "lint:js": "eslint \"**/*.js\" --fix",
+    "lint:css": "stylelint \"**/*.css\" --fix",
+    "lint:html": "html-validator --file ./index.html --verbose",
+    "validate": "npm run lint",
+    "test": "echo \"No tests specified yet\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.41.0",
+    "html-validator-cli": "^7.0.1",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0"
+  }
+}
