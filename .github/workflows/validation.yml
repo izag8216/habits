@@ -1,0 +1,26 @@
+name: Code Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Validate HTML
+      run: |
+        npx html-validator-cli ./index.html
+        
+    - name: Validate CSS
+      run: |
+        npx stylelint "**/*.css"
+        
+    - name: Validate JavaScript
+      run: |
+        npx eslint "**/*.js"

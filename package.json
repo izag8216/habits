@@ -1,0 +1,17 @@
+{
+  "name": "habits",
+  "version": "1.0.0",
+  "description": "A sleek, modern web application for tracking daily habits and building lasting routines. Built with vanilla JavaScript, this application offers a clean and intuitive interface for managing your personal habits.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^9.27.0",
+    "html-validator-cli": "^7.0.1",
+    "stylelint": "^16.19.1"
+  }
+}
