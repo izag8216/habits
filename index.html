@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Habit Tracker</h1>
+            <button id="addHabitBtn" class="btn-primary">Add New Habit</button>
+        </header>
+
+        <div class="habits-grid">
+            <!-- Habit cards will be dynamically added here -->
+        </div>
+
+        <div id="addHabitModal" class="modal">
+            <div class="modal-content">
+                <h2>Add New Habit</h2>
+                <form id="habitForm">
+                    <div class="form-group">
+                        <label for="habitName">Habit Name</label>
+                        <input type="text" id="habitName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="habitGoal">Daily Goal</label>
+                        <input type="text" id="habitGoal" placeholder="e.g., 30 mins" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="habitColor">Color</label>
+                        <input type="color" id="habitColor" value="#4CAF50">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="btn-primary">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
