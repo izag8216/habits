@@ -23,6 +23,7 @@
 15.5. 特定ファイルをレポジトリから削除する方法
 16. 便利Tips・用語集
 17. GitHubの全体像と主な機能紹介（特にActions）
+18. GitHub Actionsハンズオン：Habit Trackerアプリで学ぶCI/CD入門
 
 ---
 
@@ -258,3 +259,298 @@ GitHubは「コード管理」だけでなく、開発・運用・コラボレ�
 ---
 
 このチュートリアルに沿って進めれば、GitHubの基本から実践まで一通り体験できます。困ったときはAI（GitHub Copilot）や公式ドキュメントも活用しましょう！
+
+---
+
+## 18. GitHub Actionsハンズオン：Habit Trackerアプリで学ぶCI/CD入門
+
+このセクションでは、実際に作成したHabit Trackerアプリを使って、GitHub Actionsの基本を学びます。各手順で作業する場所（ローカルPCまたはGitHub）を明確に示しています。
+
+### 18.1 GitHub Actionsの基本設定
+
+【ローカルでの作業】
+1. ターミナルで、リポジトリのルートディレクトリに移動:
+```zsh
+cd ~/projects/github/habits
+```
+
+2. Actionsの設定ファイル用のディレクトリを作成:
+```zsh
+mkdir -p .github/workflows
+```
+
+3. 最初のワークフローファイルを作成:
+```zsh
+touch .github/workflows/validation.yml
+```
+
+4. お好みのエディタで`validation.yml`を開き、以下の内容を記述:
+```yaml
+name: Code Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Validate HTML
+      run: |
+        npx html-validator-cli ./index.html
+        
+    - name: Validate CSS
+      run: |
+        npx stylelint "**/*.css"
+        
+    - name: Validate JavaScript
+      run: |
+        npx eslint "**/*.js"
+```
+
+5. Node.js関連ファイルの準備:
+```zsh
+# package.jsonの作成
+npm init -y
+
+# 検証ツールのインストール
+npm install --save-dev html-validator-cli stylelint eslint
+```
+
+6. 変更をGitHubにプッシュ:
+```zsh
+git add .github/workflows/validation.yml package.json package-lock.json
+git commit -m "GitHub Actions: バリデーション設定を追加"
+git push
+```
+
+【GitHub上での確認】
+1. ブラウザでGitHubのリポジトリページを開く
+2. 上部メニューの「Actions」タブをクリック
+3. 先ほどプッシュした`validation.yml`のワークフローが実行されていることを確認
+
+### 18.2 自動デプロイの設定（GitHub Pages）
+
+【ローカルでの作業】
+1. 新しいワークフローファイルを作成:
+```zsh
+touch .github/workflows/deploy.yml
+```
+
+2. `deploy.yml`に以下の内容を記述:
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .
+```
+
+3. 変更をGitHubにプッシュ:
+```zsh
+git add .github/workflows/deploy.yml
+git commit -m "GitHub Actions: デプロイ設定を追加"
+git push
+```
+
+【GitHub上での設定】
+1. リポジトリのページで「Settings」タブをクリック
+2. 左サイドメニューから「Pages」を選択
+3. Source設定で「Deploy from a branch」を選択
+4. Branch設定で「gh-pages」を選択し、保存
+
+### 18.3 自動テストの追加
+
+【ローカルでの作業】
+1. テストディレクトリとファイルの作成:
+```zsh
+mkdir tests
+touch tests/app.test.js
+```
+
+2. `tests/app.test.js`に以下のテストコードを記述:
+```javascript
+describe('Habit Tracker Tests', () => {
+  test('localStorage is used', () => {
+    expect(localStorage.getItem).toBeDefined();
+  });
+  
+  test('habits array exists', () => {
+    expect(habits).toBeDefined();
+  });
+});
+```
+
+3. `package.json`にJestの設定を追加:
+```zsh
+npm install --save-dev jest
+```
+
+4. `package.json`のscriptsセクションを編集:
+```json
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+5. テスト用のワークフローファイルを作成:
+```zsh
+touch .github/workflows/test.yml
+```
+
+6. `test.yml`に以下の内容を記述:
+```yaml
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Run tests
+      run: npm test
+```
+
+7. すべての変更をGitHubにプッシュ:
+```zsh
+git add .
+git commit -m "GitHub Actions: テスト設定を追加"
+git push
+```
+
+【GitHub上での確認】
+1. 「Actions」タブで新しく追加したワークフローの実行状況を確認
+2. テスト結果のログを確認（成功：緑のチェック、失敗：赤のバツ）
+
+### 18.4 動作確認とトラブルシューティング
+
+【GitHub上での確認】
+1. リポジトリページの「Actions」タブで各ワークフローの状態を確認:
+   - ✅ 緑のチェック → 正常に完了
+   - ⌛ 黄色の円 → 実行中
+   - ❌ 赤のバツ → エラーが発生
+
+2. エラーが発生した場合:
+   - ワークフロー名をクリック
+   - 失敗したジョブをクリック
+   - 赤バツのステップを展開してログを確認
+   - エラーメッセージを基に問題を特定
+
+【ローカルでの対応】
+- エラーの種類に応じて以下を確認:
+  1. 構文エラー → YAMLファイルのインデントを確認
+  2. 依存関係エラー → `package.json`の内容とインストールを確認
+  3. テスト失敗 → テストコードとアプリコードを確認
+
+### 18.5 応用：追加の自動化設定
+
+【ローカルでの作業】
+1. 依存関係の自動更新設定を追加:
+```zsh
+mkdir -p .github
+touch .github/dependabot.yml
+```
+
+2. `dependabot.yml`に以下を記述:
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+```
+
+3. プルリクエスト時の自動レビュー設定:
+```zsh
+touch .github/workflows/review.yml
+```
+
+4. `review.yml`に以下を記述:
+```yaml
+name: Code Review
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Code Review
+      uses: reviewdog/action-eslint@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+```
+
+5. 変更をプッシュ:
+```zsh
+git add .github/dependabot.yml .github/workflows/review.yml
+git commit -m "GitHub Actions: 追加の自動化設定を追加"
+git push
+```
+
+【GitHub上での確認】
+1. 「Security」タブでDependabotの設定を確認
+2. プルリクエストを作成して自動レビューの動作を確認
+
+### 18.6 セキュリティとベストプラクティス
+
+【GitHub上での設定】
+1. シークレットの管理:
+   - リポジトリの「Settings」→「Secrets and variables」→「Actions」
+   - 「New repository secret」でシークレットを追加
+
+【ベストプラクティス】
+- ワークフローファイルは段階的に追加
+- 各ステップでの動作確認を忘れずに
+- エラー時はログを詳しく確認
+- 機密情報は必ずシークレットとして管理
+
+---
+
+**学習のポイント**: 
+- 基本的な流れは「ローカルで設定ファイル作成→GitHubにプッシュ→GitHub上で動作確認」
+- エラーが出ても慌てず、ログをよく読んで対処
+- Actions Marketplaceで公開されている便利なアクションも活用しましょう

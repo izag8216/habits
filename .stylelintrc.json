@@ -1,10 +1,14 @@
 {
   "extends": "stylelint-config-standard",
   "rules": {
-    "color-hex-case": "lower",
-    "color-hex-length": "long",
     "selector-class-pattern": null,
     "custom-property-pattern": null,
-    "no-descending-specificity": null
+    "no-descending-specificity": null,
+    "font-family-name-quotes": null,
+    "color-hex-case": null,
+    "color-hex-length": null,
+    "alpha-value-notation": null,
+    "color-function-notation": null,
+    "media-feature-range-notation": null
   }
 }
