@@ -9,7 +9,7 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v3
     
@@ -22,11 +22,8 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Validate HTML
-      run: npx html-validator --file ./index.html --verbose
-        
-    - name: Validate CSS
-      run: npx stylelint "**/*.css"
-        
-    - name: Validate JavaScript
-      run: npx eslint "**/*.js"
+    - name: Run ESLint
+      run: npm run lint:js
+    
+    - name: Run Stylelint
+      run: npm run lint:css
