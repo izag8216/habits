@@ -4,7 +4,8 @@
   "description": "A sleek, modern web application for tracking daily habits and building lasting routines. Built with vanilla JavaScript, this application offers a clean and intuitive interface for managing your personal habits.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:css": "stylelint \"**/*.css\""
   },
   "keywords": [],
   "author": "",
@@ -12,6 +13,7 @@
   "devDependencies": {
     "eslint": "^9.27.0",
     "html-validator-cli": "^7.0.1",
-    "stylelint": "^16.19.1"
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0"
   }
 }
