@@ -19,7 +19,7 @@
   "devDependencies": {
     "eslint": "^8.41.0",
     "html-validator-cli": "^7.0.1",
-    "stylelint": "^15.11.0",
+    "stylelint": "^16.19.1",
     "stylelint-config-standard": "^34.0.0"
   }
 }
